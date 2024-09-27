@@ -7,7 +7,8 @@ package edu.avanzada.registroRaza.control;
 public class Launcher {
 
     public static void main(String[] args) {
-        Gestor miPrincipal = new Gestor();
+       // Gestor miPrincipal = new Gestor();
+       new ControlPrincipal();
     }
 }
 
