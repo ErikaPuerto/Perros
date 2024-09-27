@@ -1,4 +1,4 @@
-package Modelo;
+package edu.avanzada.registroRaza.modelo;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

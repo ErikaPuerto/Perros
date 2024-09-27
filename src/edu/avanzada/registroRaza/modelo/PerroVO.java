@@ -1,4 +1,4 @@
-package Modelo;
+package edu.avanzada.registroRaza.modelo;
 
 public class PerroVO {
     

@@ -1,8 +1,8 @@
-package Control;
+package edu.avanzada.registroRaza.control;
 
 import java.util.ArrayList;
-import Modelo.PerroDAO;
-import Modelo.PerroVO;
+import edu.avanzada.registroRaza.modelo.PerroDAO;
+import edu.avanzada.registroRaza.modelo.PerroVO;
 
 public class Gestor {
 
