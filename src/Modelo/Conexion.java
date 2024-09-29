@@ -7,21 +7,31 @@ import java.sql.SQLException;
 public class Conexion {
 
     private static Connection cn = null;
-    private static String URLBD = "jdbc:mysql://localhost/mascotas";
-    private static String usuario = "root";
-    private static String contrasena = "";
+    private static final String URLBD = "jdbc:mysql://localhost:3306/avanzada";
+    private static final String usuario = "juli";
+    private static final String contrasena = "avanzada";
+
+    private Conexion() { }
 
     public static Connection getConexion() {
-        try {
-cn = DriverManager.getConnection(URLBD, usuario, contrasena);
-        } catch (SQLException ex) {
-            System.out.println("No se puede cargar el controlado");
+        if (cn == null) {
+            try {
+                cn = DriverManager.getConnection(URLBD, usuario, contrasena);
+            } catch (SQLException ex) {
+                System.out.println("No se puede conectar a la base de datos: " + ex.getMessage());
+            }
         }
         return cn;
     }
 
     public static void desconectar() {
-        cn = null;
+        if (cn != null) {
+            try {
+                cn.close();
+                cn = null;
+            } catch (SQLException ex) {
+                System.out.println("Error al cerrar la conexión: " + ex.getMessage());
+            }
+        }
     }
 }
-

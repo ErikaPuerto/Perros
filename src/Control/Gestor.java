@@ -3,164 +3,127 @@ package Control;
 import java.util.ArrayList;
 import Modelo.PerroDAO;
 import Modelo.PerroVO;
+import Utils.Propiedades;
+import Utils.Serializador;
+
+import java.util.List;
+import java.util.Map;
 
 public class Gestor {
 
     private PerroDAO miPerroDAO;
+    private List<PerroVO> listaPerros;
 
     public Gestor() {
-        //registrarPerro();
+        miPerroDAO = new PerroDAO();
+
+        // Deserializamos los datos al iniciar
+        listaPerros = Serializador.deserializarDatos();
+
+        if (listaPerros.isEmpty()) {
+            // Si no hay datos deserializados, cargamos desde la base de datos
+            listaPerros = miPerroDAO.listaDePerros();
+        }
+
+        // Cargamos los datos iniciales desde el archivo de propiedades
+        cargarDatosDesdePropiedades();
+
+        // Procesamos los datos como sea necesario
         obtenerRegistros();
-        buscarPerro();
-        //eliminarPerro();
-        modificarPerro();
+
+        // Serializamos los datos al cerrar
+        Serializador.serializarDatos(listaPerros);
     }
 
-    private void obtenerRegistros() {
-        miPerroDAO = new PerroDAO();
-        PerroVO miPerro;
-        ArrayList<PerroVO> listaPerros = miPerroDAO.listaDePerros();
-        if (listaPerros.size() > 0) {
+    private void cargarDatosDesdePropiedades() {
+        Map<String, String> razasIniciales = Propiedades.cargarPropiedades();
+
+        for (String key : razasIniciales.keySet()) {
+            String[] valores = razasIniciales.get(key).split(",");
+            String nombre = valores[0].trim();
+            String paisOrigen = valores[1].trim();
+
+            // Verificamos si la raza ya existe en la base de datos
+            if (!miPerroDAO.existePerro(nombre)) {
+                PerroVO nuevoPerro = new PerroVO();
+                nuevoPerro.setNombre(nombre);
+                nuevoPerro.setPaisOrigen(paisOrigen);
+                nuevoPerro.setClasificacion("");  // Inicialmente vacío, podría completarse más tarde
+
+                miPerroDAO.insertarDatos(nuevoPerro);  // Insertamos en la base de datos
+                listaPerros.add(nuevoPerro);  // También lo agregamos a la lista para serializar
+                System.out.println("Raza '" + nombre + "' registrada desde el archivo de propiedades.");
+            } else {
+                System.out.println("La raza '" + nombre + "' ya está registrada en la base de datos.");
+            }
+        }
+    }
+
+    public void obtenerRegistros() {
+        if (listaPerros.isEmpty()) {
+            System.out.println("No hay registros de perros.");
+        } else {
             int numeroPerro = 0;
-            for (int i = 0; i < listaPerros.size(); i++) {
+            for (PerroVO perro : listaPerros) {
                 numeroPerro++;
-                miPerro = listaPerros.get(i);
-                System.out.println("****************Estudiante No. " + numeroPerro + "**********");
-              
-                System.out.println("Raza: " + miPerro.getNombre());
-                System.out.println("Pais de Origen : " + miPerro.getPaisOrigen());
-                System.out.println("Clasificacion : " + miPerro.getClasificacion());
-                System.out.println("Apariencia: " + miPerro.getApariencia());
-                System.out.println("Pelo: " + miPerro.getPelo());
-                System.out.println("Color: " + miPerro.getColor());
-                System.out.println("Espalda: " + miPerro.getEspalda());
-                System.out.println("Lomo: " + miPerro.getLomo());
-                System.out.println("Cola: " + miPerro.getCola());
-                System.out.println("Pecho: " + miPerro.getPecho());
-                
-                System.out.println("*************************************************\n");
+                System.out.println("****************Perro No. " + numeroPerro + "**********");
+                imprimirDetallesPerro(perro);
             }
-        } else {
-            System.out.println("Actualmente no existen registros de estudiantes");
         }
     }
 
-    private void buscarPerro() {
-        miPerroDAO = new PerroDAO();
-        String nombre = "Golden";
+    public void buscarPerro(String nombre) {
         PerroVO perroEncontrado = miPerroDAO.consultarPerro(nombre);
         if (perroEncontrado != null) {
-            System.out.println("Raza: " + perroEncontrado.getNombre());
-            System.out.println("Pais de Origen : " + perroEncontrado.getPaisOrigen());
-            System.out.println("Clasificacion : " + perroEncontrado.getClasificacion());
-            System.out.println("Apariencia: " + perroEncontrado.getApariencia());
-            System.out.println("Pelo: " + perroEncontrado.getPelo());
-            System.out.println("Color: " + perroEncontrado.getColor());
-            System.out.println("Espalda: " + perroEncontrado.getEspalda());
-            System.out.println("Lomo: " + perroEncontrado.getLomo());
-            System.out.println("Cola: " + perroEncontrado.getCola());
-            System.out.println("Pecho: " + perroEncontrado.getPecho());
-            System.out.println("*************************************************\n");
-
+            imprimirDetallesPerro(perroEncontrado);
         } else {
-            System.out.println("No existen un registro de perro con ese raza");
+            System.out.println("No existe un registro de perro con esa raza.");
         }
     }
 
-    private void registrarPerro() {
-        miPerroDAO = new PerroDAO();
-        PerroVO miPerro1 = new PerroVO();
-        miPerro1.setNombre("Karla Rojas");
-        miPerro1.setPaisOrigen("");
-        miPerro1.setApariencia("Karla Rojas");
-        miPerro1.setPelo("Karla Rojas");
-        miPerro1.setColor("Karla Rojas");
-        miPerro1.setEspalda("Karla Rojas");
-        miPerro1.setLomo("Karla Rojas");
-        miPerro1.setCola("Karla Rojas");
-        miPerro1.setPecho("Karla Rojas");
-        miPerroDAO.insertarDatos(miPerro1);
-        
-        PerroVO miPerro2 = new PerroVO();
-        miPerro2.setNombre("Karla Rojas");
-        miPerro2.setPaisOrigen("");
-        miPerro2.setApariencia("Karla Rojas");
-        miPerro2.setPelo("Karla Rojas");
-        miPerro2.setColor("Karla Rojas");
-        miPerro2.setEspalda("Karla Rojas");
-        miPerro2.setLomo("Karla Rojas");
-        miPerro2.setCola("Karla Rojas");
-        miPerro2.setPecho("Karla Rojas");
-        miPerroDAO.insertarDatos(miPerro2);
-        
+    public void registrarPerro(PerroVO miPerro) {
+        if (!miPerroDAO.existePerro(miPerro.getNombre())) {
+            miPerroDAO.insertarDatos(miPerro);
+            listaPerros.add(miPerro);
+            System.out.println("Perro registrado con éxito.");
+        } else {
+            System.out.println("La raza ya está registrada.");
+        }
     }
- private void eliminarPerro() {
-        String nombre = "Golden";
-        PerroVO perroEncontrado = miPerroDAO.consultarPerro(nombre);
-        if (perroEncontrado != null) {
-            System.out.println("************ Estudiante a Eliminar****************");
-            System.out.println("Raza: " + perroEncontrado.getNombre());
-            System.out.println("Pais de Origen : " + perroEncontrado.getPaisOrigen());
-            System.out.println("Clasificacion : " + perroEncontrado.getClasificacion());
-            System.out.println("Apariencia: " + perroEncontrado.getApariencia());
-            System.out.println("Pelo: " + perroEncontrado.getPelo());
-            System.out.println("Color: " + perroEncontrado.getColor());
-            System.out.println("Espalda: " + perroEncontrado.getEspalda());
-            System.out.println("Lomo: " + perroEncontrado.getLomo());
-            System.out.println("Cola: " + perroEncontrado.getCola());
-            System.out.println("Pecho: " + perroEncontrado.getPecho());
-            System.out.println("*************************************************\n");
 
-            if (miPerroDAO.eliminarPerro(nombre)) {
-                System.out.println("Perro Eliminado");
+    public void eliminarPerro(String nombre) {
+        if (miPerroDAO.eliminarPerro(nombre)) {
+            listaPerros.removeIf(perro -> perro.getNombre().equals(nombre));
+            System.out.println("Perro Eliminado.");
+        } else {
+            System.out.println("No se pudo eliminar el registro del perro.");
+        }
+    }
+
+    public void modificarPerro(PerroVO perroModificado) {
+        PerroVO perroExistente = miPerroDAO.consultarPerro(perroModificado.getNombre());
+
+        if (perroExistente != null) {
+            perroModificado.setNombre(perroExistente.getNombre());
+            perroModificado.setPaisOrigen(perroExistente.getPaisOrigen());
+            perroModificado.setClasificacion(perroExistente.getClasificacion());
+
+            if (miPerroDAO.modificarPerro(perroModificado)) {
+                listaPerros.replaceAll(perro -> perro.getNombre().equals(perroModificado.getNombre()) ? perroModificado : perro);
+                System.out.println("Perro modificado exitosamente.");
+                imprimirDetallesPerro(perroModificado);
             } else {
-                System.out.println("No se pudo eliminar el registro del perro");
+                System.out.println("No se pudo modificar el registro del perro.");
             }
         } else {
-            System.out.println("No existen un perro con ese codigo");
+            System.out.println("No existe un registro de perro con ese nombre.");
         }
     }
-private void modificarPerro() {
-        String nombre = "1015";
-        PerroVO perroEncontrado = miPerroDAO.consultarPerro(nombre);
-        if (perroEncontrado != null) {
-            System.out.println("****************Estudiante a Modificar****************");
-            
-            System.out.println("Raza: " + perroEncontrado.getNombre());
-            System.out.println("Pais de Origen : " + perroEncontrado.getPaisOrigen());
-            System.out.println("Clasificacion : " + perroEncontrado.getClasificacion());
-            System.out.println("Apariencia: " + perroEncontrado.getApariencia());
-            System.out.println("Pelo: " + perroEncontrado.getPelo());
-            System.out.println("Color: " + perroEncontrado.getColor());
-            System.out.println("Espalda: " + perroEncontrado.getEspalda());
-            System.out.println("Lomo: " + perroEncontrado.getLomo());
-            System.out.println("Cola: " + perroEncontrado.getCola());
-            System.out.println("Pecho: " + perroEncontrado.getPecho());
 
-            System.out.println("*************************************************\n");
-           
-            if (miPerroDAO.modificarPerro(nombre)) {
-                System.out.println("Estudiante Modificado");
-                perroEncontrado = miPerroDAO.consultarPerro(nombre);
-                System.out.println("****************Estudiante Modificado****************");
-                
-                System.out.println("Raza: " + perroEncontrado.getNombre());
-                System.out.println("Pais de Origen : " + perroEncontrado.getPaisOrigen());
-                System.out.println("Clasificacion : " + perroEncontrado.getClasificacion());
-                System.out.println("Apariencia: " + perroEncontrado.getApariencia());
-                System.out.println("Pelo: " + perroEncontrado.getPelo());
-                System.out.println("Color: " + perroEncontrado.getColor());
-                System.out.println("Espalda: " + perroEncontrado.getEspalda());
-                System.out.println("Lomo: " + perroEncontrado.getLomo());
-                System.out.println("Cola: " + perroEncontrado.getCola());
-                System.out.println("Pecho: " + perroEncontrado.getPecho());
-                
-                System.out.println("*************************************************\n");
-            } else {
-                System.out.println("No se pudo modificar el registro del perro");
-            }
-        } else {
-            System.out.println("No existen un registro de perro con esa raza");
-        }
+    private void imprimirDetallesPerro(PerroVO perro) {
+        System.out.println("Raza: " + perro.getNombre());
+        System.out.println("Pais de Origen: " + perro.getPaisOrigen());
+        System.out.println("Clasificación: " + perro.getClasificacion());
+        System.out.println("*************************************************\n");
     }
 }
