@@ -132,7 +132,7 @@ public class VistaRegistrar extends javax.swing.JFrame {
 
         jLabel16.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel16.setText("Apariencia general:");
+        jLabel16.setText("Pelo(Manto):");
 
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
@@ -140,7 +140,7 @@ public class VistaRegistrar extends javax.swing.JFrame {
 
         jLabel17.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel17.setText("Apariencia general:");
+        jLabel17.setText("Color(Manto):");
 
         jTextArea3.setColumns(20);
         jTextArea3.setRows(5);
@@ -153,7 +153,7 @@ public class VistaRegistrar extends javax.swing.JFrame {
 
         jLabel18.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel18.setText("Apariencia general:");
+        jLabel18.setText("Espalda:");
 
         jTextArea4.setColumns(20);
         jTextArea4.setRows(5);
@@ -161,7 +161,7 @@ public class VistaRegistrar extends javax.swing.JFrame {
 
         jLabel19.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel19.setText("Apariencia general:");
+        jLabel19.setText("Lomo:");
 
         jTextArea5.setColumns(20);
         jTextArea5.setRows(5);
@@ -169,7 +169,7 @@ public class VistaRegistrar extends javax.swing.JFrame {
 
         jLabel20.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel20.setText("Apariencia general:");
+        jLabel20.setText(" Cola:");
 
         jTextArea6.setColumns(20);
         jTextArea6.setRows(5);
@@ -177,7 +177,7 @@ public class VistaRegistrar extends javax.swing.JFrame {
 
         jLabel21.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel21.setText("Apariencia general:");
+        jLabel21.setText("Pecho:");
 
         jTextArea7.setColumns(20);
         jTextArea7.setRows(5);
