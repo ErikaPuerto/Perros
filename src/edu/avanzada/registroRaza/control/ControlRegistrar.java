@@ -4,6 +4,8 @@
  */
 package edu.avanzada.registroRaza.control;
 
+import edu.avanzada.registroRaza.modelo.ClasificacionFCI;
+import edu.avanzada.registroRaza.modelo.Raza;
 import edu.avanzada.registroRaza.vista.VistaRegistrar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,12 +31,25 @@ public class ControlRegistrar implements ActionListener {
         vistaRegistrar.volver.addActionListener(this);
     }
 
+    
+    
+    public void limpiarCajas(){
+        vistaRegistrar.Limpiar();
+    }
+            
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e
+    ) {
         if ("Volver".equals(e.getActionCommand())) {
             vistaRegistrar.dispose();
             controlPrin.CrearVistaStart();
         }
+        if ("Limpiar".equals(e.getActionCommand())) {
+            limpiarCajas();
+        }
+        if ("Registrar".equals(e.getActionCommand())) {
+            
+        }
     }
-
 }
+

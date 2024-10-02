@@ -4,10 +4,11 @@
  */
 package edu.avanzada.registroRaza.control;
 
+import edu.avanzada.registroRaza.modelo.Raza;
 import edu.avanzada.registroRaza.vista.VistaStart;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.event.AncestorListener;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,7 +19,7 @@ public final class ControlPrincipal implements ActionListener{
     private final ControlRegistrar controlR;
     private final ControlConsultar controlC;
     private VistaStart vistaStart;
-    
+    protected ArrayList<Raza> perritos;
     public ControlPrincipal(){ 
         controlR = new ControlRegistrar(this);
         controlC = new ControlConsultar(this);
@@ -30,8 +31,9 @@ public final class ControlPrincipal implements ActionListener{
         vistaStart.salir.addActionListener(this);
         vistaStart.registrar.addActionListener(this);
         vistaStart.consultar.addActionListener(this);
+        perritos = new ArrayList<>();
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         if ("Registrar".equals(e.getActionCommand())) {
@@ -45,8 +47,5 @@ public final class ControlPrincipal implements ActionListener{
         if ("Salir".equals(e.getActionCommand())) {
             System.exit(0);
         }
-    }
-    
-    
-    
+    }   
 }
