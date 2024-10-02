@@ -1,27 +1,28 @@
 package edu.avanzada.perros.control;
 
 import edu.avanzada.perros.modelo.PerroDAO;
-import java.util.ArrayList;
 import edu.avanzada.perros.modelo.PerroVO;
 import edu.avanzada.perros.utils.Propiedades;
 import edu.avanzada.perros.utils.Serializador;
 import edu.avanzada.perros.utils.ArchivoAleatorioPerros;
-import java.sql.SQLException;
 
 import java.util.List;
 import java.util.Map;
 
 public class Gestor {
 
-    private PerroDAO miPerroDAO;
+    private final PerroDAO miPerroDAO;
     private List<PerroVO> listaPerros;
     private ArchivoAleatorioPerros archivoAleatorio;
-
+    public static void main(String[] args) {
+        new Gestor();
+    }
     public Gestor() {
         miPerroDAO = new PerroDAO();
 
         // Deserializamos los datos al iniciar
         listaPerros = Serializador.deserializarDatos();
+        
 
         if (listaPerros.isEmpty()) {
             // Si no hay datos deserializados, cargamos desde la base de datos

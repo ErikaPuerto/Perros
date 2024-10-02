@@ -19,11 +19,12 @@ public class PerroVO implements Serializable {
     private transient String cola;
     private transient String pecho;
 
-    public PerroVO() { }
+    public PerroVO() {
+    }
 
     public PerroVO(String id, String nombre, String paisOrigen, String grupo, String seccion, String apariencia,
-                   String pelo, String color, String espalda, String lomo, String cola, String pecho) {
-        
+            String pelo, String color, String espalda, String lomo, String cola, String pecho) {
+
         this.id = id;
         this.nombre = nombre;
         this.paisOrigen = paisOrigen;
@@ -38,14 +39,14 @@ public class PerroVO implements Serializable {
         this.pecho = pecho;
     }
 
-    public String getId(){
+    public String getId() {
         return id;
     }
-    
-    public void setId(String id){
+
+    public void setId(String id) {
         this.id = id;
     }
-    
+
     public String getNombre() {
         return nombre;
     }
@@ -70,14 +71,14 @@ public class PerroVO implements Serializable {
         this.grupo = grupo;
     }
 
-    
     public String getSeccion() {
         return seccion;
     }
-    
+
     public void setSeccion(String seccion) {
         this.seccion = seccion;
     }
+
     public String getApariencia() {
         return apariencia;
     }
