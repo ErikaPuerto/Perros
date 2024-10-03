@@ -17,7 +17,7 @@ public class PerroDAO {
     // Método general para buscar perros por varios criterios
     public List<PerroVO> consultarPerroPorCriterios(String id, String nombre, String paisOrigen, String grupo, String seccion, String color) {
         List<PerroVO> perrosEncontrados = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM perros WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT * FROM mascotas WHERE 1=1");
 
         // Construir la consulta
         if (id != null && !id.isEmpty()) {
@@ -27,7 +27,7 @@ public class PerroDAO {
             sql.append(" AND nombre = ?");
         }
         if (paisOrigen != null && !paisOrigen.isEmpty()) {
-            sql.append(" AND pais_origen = ?");
+            sql.append(" AND paisOrigen = ?");
         }
         if (grupo != null && !grupo.isEmpty() && seccion != null && !seccion.isEmpty()) {
             sql.append(" AND grupo = ? AND seccion = ?");
@@ -60,7 +60,7 @@ public class PerroDAO {
                 PerroVO perro = new PerroVO();
                 perro.setId(rs.getString("id"));
                 perro.setNombre(rs.getString("nombre"));
-                perro.setPaisOrigen(rs.getString("pais_origen"));
+                perro.setPaisOrigen(rs.getString("paisOrigen"));
                 perro.setGrupo(rs.getString("grupo"));
                 perro.setSeccion(rs.getString("seccion"));
                 perro.setColor(rs.getString("color"));
