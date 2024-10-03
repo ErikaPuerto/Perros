@@ -3,6 +3,8 @@ package edu.avanzada.perros.controlador;
 import edu.avanzada.perros.modelo.Conexion;
 import edu.avanzada.perros.modelo.PerroDAO;
 import edu.avanzada.perros.modelo.PerroVO;
+import edu.avanzada.perros.vista.ControladorVentana;  // Importa la nueva clase
+import edu.avanzada.perros.vista.ControladorVentana;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,14 +12,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author nedic
- */
 public class ControladorPerro {
     private List<PerroVO> listaPerros;
     private PerroDAO miPerroDAO;
-    
+    private ControladorVentana controladorVentana;  // Declarar la clase para ventanas emergentes
+
+    public ControladorPerro() {
+        controladorVentana = new ControladorVentana();  // Instanciar la clase
+    }
+
     public ArrayList<PerroVO> listaDePerros() {
         ArrayList<PerroVO> misPerros = new ArrayList<>();
         String consulta = "SELECT * FROM mascotas";
@@ -41,11 +44,11 @@ public class ControladorPerro {
                 misPerros.add(perro);
             }
         } catch (SQLException ex) {
-            System.out.println("Error al obtener la lista de perros: " + ex.getMessage());
+            controladorVentana.mostrarError("Error al obtener la lista de perros: " + ex.getMessage());
         }
         return misPerros;
     }
-    
+
     public boolean existePerro(String id) {
         String consulta = "SELECT 1 FROM mascotas WHERE id = ?";
         try (Connection con = Conexion.getConexion();
@@ -55,31 +58,32 @@ public class ControladorPerro {
                 return rs.next();  // Si devuelve algún resultado, el perro existe
             }
         } catch (SQLException ex) {
-            System.out.println("Error en la verificación de existencia: " + ex.getMessage());
+            controladorVentana.mostrarError("Error en la verificación de existencia: " + ex.getMessage());
         }
         return false; // Retorna false si no encuentra el perro o hay algún error
     }
-    
+
     public void obtenerRegistros() {
-    listaPerros = listaDePerros();
-    if (listaPerros.isEmpty()) {
-        System.out.println("No hay registros de perros.");
-    } else {
-        int numeroPerro = 0;
-        for (PerroVO perro : listaPerros) {
-            numeroPerro++;
-            System.out.println("*Perro No. " + numeroPerro + "*");
-            imprimirDetallesPerro(perro);
+        listaPerros = listaDePerros();
+        if (listaPerros.isEmpty()) {
+            controladorVentana.mostrarMensaje("No hay registros de perros.");
+        } else {
+            int numeroPerro = 0;
+            for (PerroVO perro : listaPerros) {
+                numeroPerro++;
+                controladorVentana.mostrarMensaje("*Perro No. " + numeroPerro + "*");
+                imprimirDetallesPerro(perro);
+            }
         }
     }
-}
 
     public void imprimirDetallesPerro(PerroVO perro) {
-        System.out.println("Id: " + perro.getId());
-        System.out.println("Raza: " + perro.getNombre());
-        System.out.println("Pais de Origen: " + perro.getPaisOrigen());
-        System.out.println("Grupo: " + perro.getGrupo());
-        System.out.println("Seccion: " + perro.getSeccion());
-        System.out.println("*****************\n");
+        // Utiliza ventana emergente para mostrar detalles
+        controladorVentana.mostrarMensaje("Id: " + perro.getId() +
+                                        "\nRaza: " + perro.getNombre() +
+                                        "\nPais de Origen: " + perro.getPaisOrigen() +
+                                        "\nGrupo: " + perro.getGrupo() +
+                                        "\nSeccion: " + perro.getSeccion() +
+                                        "\n*****************\n");
     }
 }

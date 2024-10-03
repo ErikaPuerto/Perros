@@ -1,8 +1,8 @@
 package edu.avanzada.perros.utils;
 
 import edu.avanzada.perros.modelo.PerroVO;
+import edu.avanzada.perros.vista.ControladorVentana;
 import java.io.File;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,42 +12,45 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Serializador {
-
     private static final String FILE_NAME = "razas_serializadas.dat";
+    private ControladorVentana controladorVentana;
 
-    public static void serializarDatos(List<PerroVO> listaPerros) {
-    File archivo = new File(FILE_NAME);
-
-    // Verifica si el archivo ya existe
-    if (!archivo.exists()) {
-        try (FileOutputStream fos = new FileOutputStream(archivo);
-             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-            oos.writeObject(listaPerros);
-            System.out.println("Datos serializados correctamente.");
-        } catch (IOException ex) {
-            System.out.println("Error al serializar los datos: " + ex.getMessage());
-        }
-    } else {
-        System.out.println("El archivo ya existe. No se han serializado los datos.");
+    // Constructor que recibe ControladorVentana
+    public Serializador(ControladorVentana controladorVentana) {
+        this.controladorVentana = controladorVentana;
     }
-}
 
-    public static List<PerroVO> deserializarDatos() {
-        List<PerroVO> listaPerros = new ArrayList<>();
-        
-        
-        File archivo = new File("razas_serializadas.dat");
+    public void serializarDatos(List<PerroVO> listaPerros) {
+        File archivo = new File(FILE_NAME);
+
+        // Verifica si el archivo ya existe
         if (!archivo.exists()) {
-        System.out.println("Archivo de serializacion no encontrado. Cargando lista vacia.");
-        return listaPerros;  // Devuelve lista vacía si el archivo no existe
+            try (FileOutputStream fos = new FileOutputStream(archivo);
+                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+                oos.writeObject(listaPerros);
+                controladorVentana.mostrarMensaje("Datos serializados correctamente.");
+            } catch (IOException ex) {
+                controladorVentana.mostrarError("Error al serializar los datos: " + ex.getMessage());
+            }
+        } else {
+            controladorVentana.mostrarError("El archivo ya existe. No se han serializado los datos.");
         }
-        
+    }
+
+    public List<PerroVO> deserializarDatos() {
+        List<PerroVO> listaPerros = new ArrayList<>();
+        File archivo = new File(FILE_NAME);
+        if (!archivo.exists()) {
+            controladorVentana.mostrarError("Archivo de serialización no encontrado. Cargando lista vacía.");
+            return listaPerros;  // Devuelve lista vacía si el archivo no existe
+        }
+
         try (FileInputStream fis = new FileInputStream(FILE_NAME);
              ObjectInputStream ois = new ObjectInputStream(fis)) {
             listaPerros = (List<PerroVO>) ois.readObject();
-            System.out.println("Datos deserializados correctamente.");
+            controladorVentana.mostrarMensaje("Datos deserializados correctamente.");
         } catch (IOException | ClassNotFoundException ex) {
-            System.out.println("Error al deserializar los datos: " + ex.getMessage());
+            controladorVentana.mostrarError("Error al deserializar los datos: " + ex.getMessage());
         }
         return listaPerros;
     }

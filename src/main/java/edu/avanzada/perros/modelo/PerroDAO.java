@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PerroDAO {
-      private Connection cn;
-      // Constructor de PerroDAO
+    private Connection cn;
+
+    // Constructor de PerroDAO
     public PerroDAO() {
         // Inicializa la conexión usando un método estático de tu clase de conexión
         this.cn = Conexion.getConexion(); // Asegúrate de que esto no sea null
     }
+
     // Método general para buscar perros por varios criterios
     public List<PerroVO> consultarPerroPorCriterios(String id, String nombre, String paisOrigen, String grupo, String seccion, String color) {
         List<PerroVO> perrosEncontrados = new ArrayList<>();
@@ -22,7 +24,7 @@ public class PerroDAO {
         // Construir la consulta
         if (id != null && !id.isEmpty()) {
             sql.append(" AND id = ?");
-        } 
+        }
         if (nombre != null && !nombre.isEmpty()) {
             sql.append(" AND nombre = ?");
         }
@@ -67,7 +69,7 @@ public class PerroDAO {
                 perrosEncontrados.add(perro);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error al consultar perros: " + e.getMessage(), e);
         }
 
         return perrosEncontrados;
@@ -77,6 +79,7 @@ public class PerroDAO {
     public List<PerroVO> consultarPorId(String id) {
         return consultarPerroPorCriterios(id, null, null, null, null, null);
     }
+
     public List<PerroVO> consultarPorNombre(String nombre) {
         return consultarPerroPorCriterios(null, nombre, null, null, null, null);
     }
@@ -92,7 +95,6 @@ public class PerroDAO {
     public List<PerroVO> consultarPorColor(String color) {
         return consultarPerroPorCriterios(null, null, null, null, null, color);
     }
-
 
     public boolean insertarDatos(PerroVO perro) {
         String insercion = "INSERT INTO mascotas (id, nombre, paisOrigen, grupo, seccion, apariencia, pelo, color, espalda, lomo, cola, pecho) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -111,11 +113,9 @@ public class PerroDAO {
             ps.setString(11, perro.getCola());
             ps.setString(12, perro.getPecho());
             ps.executeUpdate();
-            System.out.println("Datos del perro insertados correctamente.");
             return true;
         } catch (SQLException ex) {
-            System.out.println("Error al insertar los datos: " + ex.getMessage());
-            return false;
+            throw new RuntimeException("Error al insertar los datos: " + ex.getMessage(), ex);
         }
     }
 
@@ -127,11 +127,9 @@ public class PerroDAO {
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException ex) {
-            System.out.println("Error al eliminar el perro: " + ex.getMessage());
-            return false;
+            throw new RuntimeException("Error al eliminar el perro: " + ex.getMessage(), ex);
         }
     }
-    
 
     public boolean modificarPerro(PerroVO perro) {
         String consulta = "UPDATE mascotas SET nombre = ?, paisOrigen = ?, grupo = ?, seccion = ?, apariencia = ?, pelo = ?, color = ?, espalda = ?, lomo = ?, cola = ?, pecho = ? WHERE id = ?";
@@ -152,8 +150,7 @@ public class PerroDAO {
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException ex) {
-            System.out.println("Error al modificar el perro: " + ex.getMessage());
-            return false;
+            throw new RuntimeException("Error al modificar el perro: " + ex.getMessage(), ex);
         }
     }
 }

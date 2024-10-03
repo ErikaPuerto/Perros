@@ -17,20 +17,20 @@ public class Conexion {
             Class.forName("com.mysql.cj.jdbc.Driver");
             cn = DriverManager.getConnection(URLBD, usuario, contrasena);
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("Error al conectar a la base de datos: " + ex.getMessage());
+            // Aquí puedes manejar la excepción o lanzar una excepción personalizada
+            throw new RuntimeException("Error al conectar a la base de datos: " + ex.getMessage(), ex);
         }
         return cn;
     }
-
 
     public static void desconectar(Connection cn) {
         if (cn != null) {
             try {
                 cn.close();
             } catch (SQLException ex) {
-                System.out.println("Error al cerrar la conexión: " + ex.getMessage());
+                // Aquí también puedes manejar la excepción o lanzar una excepción personalizada
+                throw new RuntimeException("Error al cerrar la conexión: " + ex.getMessage(), ex);
             }
         }
     }
 }
-

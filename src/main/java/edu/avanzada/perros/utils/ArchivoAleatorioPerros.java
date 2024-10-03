@@ -1,9 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package edu.avanzada.perros.utils;
 
+import edu.avanzada.perros.vista.ControladorVentana;
 import edu.avanzada.perros.modelo.PerroVO;
 import java.io.*;
 import java.util.*;
@@ -13,8 +10,11 @@ public class ArchivoAleatorioPerros {
     private RandomAccessFile archivo;
     private long tamreg;
     private long canreg;
+    private ControladorVentana controlador; // Referencia al controlador
 
-    public ArchivoAleatorioPerros() {
+    // Constructor que recibe ControladorVentana
+    public ArchivoAleatorioPerros(ControladorVentana controlador) {
+        this.controlador = controlador; // Inicializa la referencia al controlador
         this.tamreg = 2910; // 10 + 25 + 25 + 25 + 25 + (400 * 7) = 2910
         this.canreg = 0;
     }
@@ -41,9 +41,11 @@ public class ArchivoAleatorioPerros {
                 }
             }
             
-            System.out.println("Archivo aleatorio creado: " + fl.getAbsolutePath());
+            // Llamar al método del controlador para mostrar un mensaje
+            controlador.mostrarMensaje("Archivo aleatorio creado: " + fl.getAbsolutePath());
         } catch (IOException e) {
-            System.out.println("Error al escribir en el archivo: " + e.getMessage());
+            // Llamar al método del controlador para mostrar un mensaje de error
+            controlador.mostrarMensaje("Error al escribir en el archivo: " + e.getMessage());
         } finally {
             cerrar();
         }
@@ -71,7 +73,7 @@ public class ArchivoAleatorioPerros {
     }
 
     public void leerTodo() {
-        System.out.println("\nMostrando todos los Registros");
+        controlador.mostrarMensaje("\nMostrando todos los Registros");
         try {
             archivo = new RandomAccessFile(fl, "r");
             archivo.seek(0);
@@ -86,12 +88,12 @@ public class ArchivoAleatorioPerros {
                 String apariencia = leerCampo(400); // apariencia
                 String pelo = leerCampo(400); // pelo
                 String color = leerCampo(400); // color
-                String esplada = leerCampo(400); // espalda
+                String espalda = leerCampo(400); // espalda
                 String lomo = leerCampo(400); // lomo
                 String cola = leerCampo(400); // cola
                 String pecho = leerCampo(400); // pecho
                 
-                System.out.println("Registro No: " + (r + 1) + 
+                controlador.mostrarMensaje("Registro No: " + (r + 1) + 
                                    " ID: " + id + 
                                    " Nombre: " + nombre + 
                                    " País de Origen: " + paisOrigen +
@@ -99,7 +101,7 @@ public class ArchivoAleatorioPerros {
                                    " Sección: " + seccion);
             }
         } catch (IOException ioe) {
-            System.out.println("Error al leer el archivo: " + ioe.getMessage());
+            controlador.mostrarMensaje("Error al leer el archivo: " + ioe.getMessage());
         } finally {
             cerrar();
         }
@@ -117,7 +119,7 @@ public class ArchivoAleatorioPerros {
                 archivo.close();
             }
         } catch (IOException e) {
-            System.out.println("Error al cerrar el archivo: " + e.getMessage());
+            controlador.mostrarMensaje("Error al cerrar el archivo: " + e.getMessage());
         }
     }
 }
