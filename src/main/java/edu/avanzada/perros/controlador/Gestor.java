@@ -46,38 +46,43 @@ public class Gestor {
     }
 
     public void modificarPerro(PerroVO perroModificado) {
-        PerroVO perroExistente = miPerroDAO.consultarPerro(perroModificado.getId());
+    // Consultar el perro existente por ID
+    List<PerroVO> perrosExistentes = miPerroDAO.consultarPorId(perroModificado.getId());
 
+    if (!perrosExistentes.isEmpty()) {
+        PerroVO perroExistente = perrosExistentes.get(0); // Obtener el primer resultado
 
-        if (perroExistente != null) {
-            perroModificado.setNombre(perroExistente.getNombre());
-            perroModificado.setPaisOrigen(perroExistente.getPaisOrigen());
-            perroModificado.setGrupo(perroExistente.getGrupo());
-            perroModificado.setSeccion(perroExistente.getSeccion());
-            perroModificado.setApariencia(perroExistente.getApariencia());
-            perroModificado.setPelo(perroExistente.getPelo());
-            perroModificado.setColor(perroExistente.getColor());
-            perroModificado.setEspalda(perroExistente.getEspalda());
-            perroModificado.setLomo(perroExistente.getLomo());
-            perroModificado.setCola(perroExistente.getCola());
-            perroModificado.setPecho(perroExistente.getPecho());
+        // Actualizar los campos del perro modificado
+        perroModificado.setNombre(perroExistente.getNombre());
+        perroModificado.setPaisOrigen(perroExistente.getPaisOrigen());
+        perroModificado.setGrupo(perroExistente.getGrupo());
+        perroModificado.setSeccion(perroExistente.getSeccion());
+        perroModificado.setApariencia(perroExistente.getApariencia());
+        perroModificado.setPelo(perroExistente.getPelo());
+        perroModificado.setColor(perroExistente.getColor());
+        perroModificado.setEspalda(perroExistente.getEspalda());
+        perroModificado.setLomo(perroExistente.getLomo());
+        perroModificado.setCola(perroExistente.getCola());
+        perroModificado.setPecho(perroExistente.getPecho());
 
-
-            if (miPerroDAO.modificarPerro(perroModificado)) {
-                listaPerros.replaceAll(perro -> perro.getNombre().equals(perroModificado.getNombre()) ? perroModificado : perro);
-                System.out.println("Perro modificado exitosamente.");
-                miControladorPerro.imprimirDetallesPerro(perroModificado);
-            } else {
-                System.out.println("No se pudo modificar el registro del perro.");
-            }
+        // Intentar modificar el perro en la base de datos
+        if (miPerroDAO.modificarPerro(perroModificado)) {
+            // Actualizar la lista de perros en memoria
+            listaPerros.replaceAll(perro -> perro.getId().equals(perroModificado.getId()) ? perroModificado : perro);
+            System.out.println("Perro modificado exitosamente.");
+            miControladorPerro.imprimirDetallesPerro(perroModificado);
         } else {
-            System.out.println("No existe un registro de perro con ese nombre.");
+            System.out.println("No se pudo modificar el registro del perro.");
         }
+    } else {
+        System.out.println("No existe un registro de perro con ese ID.");
     }
+}
+
     
-    //Consultar perro por id
+    //Consultar perro por id (llave primaria)
     public void buscarPerro(String id) {
-        PerroVO perroEncontrado = miPerroDAO.consultarPerro(id);
+        PerroVO perroEncontrado = (PerroVO) miPerroDAO.consultarPorId(id);
         if (perroEncontrado != null) {
             miControladorPerro.imprimirDetallesPerro(perroEncontrado);
         } else {
@@ -85,34 +90,5 @@ public class Gestor {
         }
     }
     
-    //Consulta por nombre de la raza
-    public void buscarPerroNombre(String nombre) {
-        PerroVO perroEncontrado = miPerroDAO.consultarPerroNombre(nombre);
-        if (perroEncontrado != null) {
-            miControladorPerro.imprimirDetallesPerro(perroEncontrado);
-        } else {
-            System.out.println("No existe un registro de perro con esa raza.");
-        }
-    }
-    
-    //Consulta todas las razas por pais de Origen
-    public void buscarPerroPais(String paisOrigen) {
-        PerroVO perroEncontrado = miPerroDAO.consultarPerroPais(paisOrigen);
-        if (perroEncontrado != null) {
-            miControladorPerro.imprimirDetallesPerro(perroEncontrado);
-        } else {
-            System.out.println("No existe un registro de perro con esa raza.");
-        }
-    }
-    
-    //Consultar todas las razas por color de manto
-    public void buscarPerroManto(String color) {
-        PerroVO perroEncontrado = miPerroDAO.consultarPerroColor(color);
-        if (perroEncontrado != null) {
-            miControladorPerro.imprimirDetallesPerro(perroEncontrado);
-        } else {
-            System.out.println("No existe un registro de perro con esa raza.");
-        }
-    }
-
+  
 }

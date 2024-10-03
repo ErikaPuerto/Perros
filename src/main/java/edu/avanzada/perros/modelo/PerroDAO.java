@@ -5,129 +5,94 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PerroDAO {
+      private Connection cn;
+      // Constructor de PerroDAO
+    public PerroDAO() {
+        // Inicializa la conexión usando un método estático de tu clase de conexión
+        this.cn = Conexion.getConexion(); // Asegúrate de que esto no sea null
+    }
+    // Método general para buscar perros por varios criterios
+    public List<PerroVO> consultarPerroPorCriterios(String id, String nombre, String paisOrigen, String grupo, String seccion, String color) {
+        List<PerroVO> perrosEncontrados = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM perros WHERE 1=1");
 
-    //Consultar perro por id
-    public PerroVO consultarPerro(String id) {
-        PerroVO perro = null;
-        String consulta = "SELECT * FROM mascotas WHERE id = ?";
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(consulta)) {
-            ps.setString(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    perro = new PerroVO();
-                    perro.setId(rs.getString("id"));
-                    perro.setNombre(rs.getString("nombre"));
-                    perro.setPaisOrigen(rs.getString("paisOrigen"));
-                    perro.setGrupo(rs.getString("grupo"));
-                    perro.setSeccion(rs.getString("seccion"));
-                    perro.setApariencia(rs.getString("apariencia"));
-                    perro.setPelo(rs.getString("pelo"));
-                    perro.setColor(rs.getString("color"));
-                    perro.setEspalda(rs.getString("espalda"));
-                    perro.setLomo(rs.getString("lomo"));
-                    perro.setCola(rs.getString("cola"));
-                    perro.setPecho(rs.getString("pecho"));
-                }
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error en la consulta: " + ex.getMessage());
+        // Construir la consulta
+        if (id != null && !id.isEmpty()) {
+            sql.append(" AND id = ?");
+        } 
+        if (nombre != null && !nombre.isEmpty()) {
+            sql.append(" AND nombre = ?");
         }
-        return perro;
+        if (paisOrigen != null && !paisOrigen.isEmpty()) {
+            sql.append(" AND pais_origen = ?");
+        }
+        if (grupo != null && !grupo.isEmpty() && seccion != null && !seccion.isEmpty()) {
+            sql.append(" AND grupo = ? AND seccion = ?");
+        }
+        if (color != null && !color.isEmpty()) {
+            sql.append(" AND color = ?");
+        }
+
+        try (PreparedStatement stmt = cn.prepareStatement(sql.toString())) {
+            int index = 1;
+            if (id != null && !id.isEmpty()) {
+                stmt.setString(index++, id);
+            }
+            if (nombre != null && !nombre.isEmpty()) {
+                stmt.setString(index++, nombre);
+            }
+            if (paisOrigen != null && !paisOrigen.isEmpty()) {
+                stmt.setString(index++, paisOrigen);
+            }
+            if (grupo != null && !grupo.isEmpty() && seccion != null && !seccion.isEmpty()) {
+                stmt.setString(index++, grupo);
+                stmt.setString(index++, seccion);
+            }
+            if (color != null && !color.isEmpty()) {
+                stmt.setString(index++, color);
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                PerroVO perro = new PerroVO();
+                perro.setId(rs.getString("id"));
+                perro.setNombre(rs.getString("nombre"));
+                perro.setPaisOrigen(rs.getString("pais_origen"));
+                perro.setGrupo(rs.getString("grupo"));
+                perro.setSeccion(rs.getString("seccion"));
+                perro.setColor(rs.getString("color"));
+                perrosEncontrados.add(perro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return perrosEncontrados;
     }
 
-    //Consulta por nombre de la raza
-    public PerroVO consultarPerroNombre(String nombre) {
-        PerroVO perro = null;
-        String consulta = "SELECT * FROM mascotas WHERE nombre = ?";
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(consulta)) {
-            ps.setString(1, nombre);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    perro = new PerroVO();
-                    perro.setId(rs.getString("id"));
-                    perro.setNombre(rs.getString("nombre"));
-                    perro.setPaisOrigen(rs.getString("paisOrigen"));
-                    perro.setGrupo(rs.getString("grupo"));
-                    perro.setSeccion(rs.getString("seccion"));
-                    perro.setApariencia(rs.getString("apariencia"));
-                    perro.setPelo(rs.getString("pelo"));
-                    perro.setColor(rs.getString("color"));
-                    perro.setEspalda(rs.getString("espalda"));
-                    perro.setLomo(rs.getString("lomo"));
-                    perro.setCola(rs.getString("cola"));
-                    perro.setPecho(rs.getString("pecho"));
-                }
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error en la consulta: " + ex.getMessage());
-        }
-        return perro;
+    // Métodos específicos para cada criterio
+    public List<PerroVO> consultarPorId(String id) {
+        return consultarPerroPorCriterios(id, null, null, null, null, null);
     }
-    
-    //Consulta todas las razas por pais de Origen
-    public PerroVO consultarPerroPais(String paisOrigen) {
-        PerroVO perro = null;
-        String consulta = "SELECT * FROM mascotas WHERE paisOrigen = ?";
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(consulta)) {
-            ps.setString(1, paisOrigen);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    perro = new PerroVO();
-                    perro.setId(rs.getString("id"));
-                    perro.setNombre(rs.getString("nombre"));
-                    perro.setPaisOrigen(rs.getString("paisOrigen"));
-                    perro.setGrupo(rs.getString("grupo"));
-                    perro.setSeccion(rs.getString("seccion"));
-                    perro.setApariencia(rs.getString("apariencia"));
-                    perro.setPelo(rs.getString("pelo"));
-                    perro.setColor(rs.getString("color"));
-                    perro.setEspalda(rs.getString("espalda"));
-                    perro.setLomo(rs.getString("lomo"));
-                    perro.setCola(rs.getString("cola"));
-                    perro.setPecho(rs.getString("pecho"));
-                }
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error en la consulta: " + ex.getMessage());
-        }
-        return perro;
+    public List<PerroVO> consultarPorNombre(String nombre) {
+        return consultarPerroPorCriterios(null, nombre, null, null, null, null);
     }
-    
-    //Consultar todas las razas por color de manto
-    public PerroVO consultarPerroColor(String color) {
-        PerroVO perro = null;
-        String consulta = "SELECT * FROM mascotas WHERE color = ?";
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(consulta)) {
-            ps.setString(1, color);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    perro = new PerroVO();
-                    perro.setId(rs.getString("id"));
-                    perro.setNombre(rs.getString("nombre"));
-                    perro.setPaisOrigen(rs.getString("paisOrigen"));
-                    perro.setGrupo(rs.getString("grupo"));
-                    perro.setSeccion(rs.getString("seccion"));
-                    perro.setApariencia(rs.getString("apariencia"));
-                    perro.setPelo(rs.getString("pelo"));
-                    perro.setColor(rs.getString("color"));
-                    perro.setEspalda(rs.getString("espalda"));
-                    perro.setLomo(rs.getString("lomo"));
-                    perro.setCola(rs.getString("cola"));
-                    perro.setPecho(rs.getString("pecho"));
-                }
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error en la consulta: " + ex.getMessage());
-        }
-        return perro;
-    }    
-    
+
+    public List<PerroVO> consultarPorPaisOrigen(String paisOrigen) {
+        return consultarPerroPorCriterios(null, null, paisOrigen, null, null, null);
+    }
+
+    public List<PerroVO> consultarPorGrupoYSeccion(String grupo, String seccion) {
+        return consultarPerroPorCriterios(null, null, null, grupo, seccion, null);
+    }
+
+    public List<PerroVO> consultarPorColor(String color) {
+        return consultarPerroPorCriterios(null, null, null, null, null, color);
+    }
+
 
     public boolean insertarDatos(PerroVO perro) {
         String insercion = "INSERT INTO mascotas (id, nombre, paisOrigen, grupo, seccion, apariencia, pelo, color, espalda, lomo, cola, pecho) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
