@@ -1,21 +1,29 @@
 
 package edu.avanzada.perros.control;
 
+import edu.avanzada.perros.modelo.PerroDAO;
+import edu.avanzada.perros.modelo.PerroVO;
+import edu.avanzada.perros.utils.ArchivoAleatorioPerros;
 import edu.avanzada.perros.vista.VistaStart1;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  *
  * @author anaro
  */
 public final class ControlPrincipal implements ActionListener {
-
+    
+    private final PerroDAO miPerroDAO;
+    private List<PerroVO> listaPerros;
+    private ArchivoAleatorioPerros archivoAleatorio;
     private final ControlRegistrar controlR;
     private final ControlConsultar controlC;
     private VistaStart1 vistaStart;
 
     public ControlPrincipal() {
+        miPerroDAO =new PerroDAO();
         controlR = new ControlRegistrar(this);
         controlC = new ControlConsultar(this);
         CrearVistaStart();
