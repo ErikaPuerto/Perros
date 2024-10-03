@@ -1,5 +1,6 @@
 package edu.avanzada.perros.controlador;
 
+import edu.avanzada.perros.modelo.PerroVO;
 import java.util.ArrayList;
 import edu.avanzada.perros.modelo.PerroDAO;
 import edu.avanzada.perros.controlador.ControladorPerro;
@@ -19,20 +20,25 @@ public class Gestor {
     private List<PerroVO> listaPerros;
     private ArchivoAleatorioPerros archivoAleatorio;
 
+    public Gestor() {
+    this.miControladorPerro = new ControladorPerro();
+    this.miPerroDAO = new PerroDAO();  // Asegúrate de que también se inicialice el DAO
+    this.listaPerros = new ArrayList<>();  // Asegúrate de inicializar la lista
+}
 
     public void registrarPerro(PerroVO miPerro) {
         if (!miControladorPerro.existePerro(miPerro.getNombre())) {
             miPerroDAO.insertarDatos(miPerro);
             listaPerros.add(miPerro);
-            System.out.println("Perro registrado con éxito.");
+            System.out.println("Perro registrado con exito.");
         } else {
-            System.out.println("La raza ya está registrada.");
+            System.out.println("La raza ya esta registrada.");
         }
     }
 
     public void eliminarPerro(String id) {
         if (miPerroDAO.eliminarPerro(id)) {
-            listaPerros.removeIf(perro -> perro.getNombre().equals(id));
+            listaPerros.removeIf(perro -> perro.getId().equals(id));
             System.out.println("Perro Eliminado.");
         } else {
             System.out.println("No se pudo eliminar el registro del perro.");
@@ -68,8 +74,40 @@ public class Gestor {
             System.out.println("No existe un registro de perro con ese nombre.");
         }
     }
+    
+    //Consultar perro por id
     public void buscarPerro(String id) {
         PerroVO perroEncontrado = miPerroDAO.consultarPerro(id);
+        if (perroEncontrado != null) {
+            miControladorPerro.imprimirDetallesPerro(perroEncontrado);
+        } else {
+            System.out.println("No existe un registro de perro con esa raza.");
+        }
+    }
+    
+    //Consulta por nombre de la raza
+    public void buscarPerroNombre(String nombre) {
+        PerroVO perroEncontrado = miPerroDAO.consultarPerroNombre(nombre);
+        if (perroEncontrado != null) {
+            miControladorPerro.imprimirDetallesPerro(perroEncontrado);
+        } else {
+            System.out.println("No existe un registro de perro con esa raza.");
+        }
+    }
+    
+    //Consulta todas las razas por pais de Origen
+    public void buscarPerroPais(String paisOrigen) {
+        PerroVO perroEncontrado = miPerroDAO.consultarPerroPais(paisOrigen);
+        if (perroEncontrado != null) {
+            miControladorPerro.imprimirDetallesPerro(perroEncontrado);
+        } else {
+            System.out.println("No existe un registro de perro con esa raza.");
+        }
+    }
+    
+    //Consultar todas las razas por color de manto
+    public void buscarPerroManto(String color) {
+        PerroVO perroEncontrado = miPerroDAO.consultarPerroColor(color);
         if (perroEncontrado != null) {
             miControladorPerro.imprimirDetallesPerro(perroEncontrado);
         } else {

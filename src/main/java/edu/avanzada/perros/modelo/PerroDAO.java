@@ -99,7 +99,7 @@ public class PerroDAO {
     }
     
     //Consultar todas las razas por color de manto
-    public PerroVO consultarPerroManto(String color) {
+    public PerroVO consultarPerroColor(String color) {
         PerroVO perro = null;
         String consulta = "SELECT * FROM mascotas WHERE color = ?";
         try (Connection con = Conexion.getConexion();
