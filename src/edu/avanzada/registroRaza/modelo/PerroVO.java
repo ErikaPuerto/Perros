@@ -1,4 +1,4 @@
-package Modelo;
+package edu.avanzada.registroRaza.modelo;
 
 public class PerroVO {
     
@@ -15,7 +15,7 @@ public class PerroVO {
 
     public PerroVO() {   }
     public PerroVO(String nombre, String paisOrigen, String clasificacion, String apariencia,
-            String pelo, String color, String esplada, String lomo, String cola, String pecho) {
+            String pelo, String color, String espalda, String lomo, String cola, String pecho) {
         this.nombre = nombre;
         this.paisOrigen = paisOrigen;
         this.clasificacion = clasificacion;
